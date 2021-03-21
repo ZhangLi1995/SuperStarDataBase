@@ -41,9 +41,16 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 }
 
 // SetupViews loads the templates.
+/*
+* 这个项目的瓶颈包括：
+* 1.模板加载
+* 2.数据库缓存与否
+* 3.模板方法，日志
+ */
 func (b *Bootstrapper) SetupViews(viewsDir string) {
 	htmlEngine := iris.HTML(viewsDir, ".html").Layout("shared/layout.html")
 	// 每次重新加载模版（线上关闭它）
+	// 本地测试，true_QPS:989, false_QPS:473
 	htmlEngine.Reload(false)
 	// 给模版内置各种定制的方法
 	htmlEngine.AddFunc("FromUnixtimeShort", func(t int) string {
